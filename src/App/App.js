@@ -11,6 +11,12 @@ class App extends Component {
     }
   }
 
+  componentDidMount() {
+    fetch("http://demo4452328.mockable.io/table/1")
+      .then(res => res.json())
+      .then(data => this.setState({tableData: data}));
+  }
+
   render() {
     return (
       <div className="App">
