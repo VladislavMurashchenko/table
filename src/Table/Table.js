@@ -2,7 +2,7 @@ import React from 'react';
 import './Table.css';
 
 import TableContentRow from './TableContentRow/TableContentRow';
-import TableTitleRow from './TableContentRow/TableContentRow';
+import TableTitleRow from './TableTitleRow/TableTitleRow';
 
 
 function Table({data}) {
@@ -74,20 +74,21 @@ export default Table;
 function getStateTitleFormTitle(title) {
   const stateTitle = [];
 
-  let maxDepth = 0;
   let currentDeptch = -1;
 
   title.forEach(function loop(item) {
     currentDeptch++;
 
     if (!stateTitle[currentDeptch]) stateTitle[currentDeptch] = [];
-    stateTitle[currentDeptch].push(item.value);
 
     if (item.children) {
       item.children.forEach(loop);
     }
 
-    maxDepth = Math.max(currentDeptch, maxDepth);
+    stateTitle[currentDeptch].push({
+      value: item.value
+    });
+
     currentDeptch--;
   })
 

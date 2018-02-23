@@ -4,8 +4,8 @@ function TableTitleRow({ row }) {
   return (
     <tr>
       {
-        Array.isArray(row) && row.map((value, i) => {
-          return <td key={i}>{value}</td>;
+        Array.isArray(row) && row.map((item, i) => {
+          return <td key={i}>{item.value}</td>;
         })
       }
     </tr>
