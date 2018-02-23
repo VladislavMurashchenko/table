@@ -2,26 +2,25 @@ import React from 'react';
 import './Table.css';
 
 import TableContentRow from './TableContentRow/TableContentRow';
+import TableTitleRow from './TableContentRow/TableContentRow';
 
 
 function Table({data}) {
   const {title, content} = data;
 
   function renderTitle() {
+    const stateTitle = title ? getStateTitleFormTitle(title) : [];
+    console.log(stateTitle);
 
     return (
       <thead>
-        <tr>
         {
-          Array.isArray(title) && title.map((item, i) => {
+          stateTitle.map((row, i) => {
             return (
-              <td key={i}>
-                {item.value}
-              </td>
+              <TableTitleRow key={i} row={row}/>
             );
           })
         }
-        </tr>
 
         {/* <tr>
           <td rowSpan="4">order</td>
@@ -71,3 +70,27 @@ function Table({data}) {
 }
 
 export default Table;
+
+function getStateTitleFormTitle(title) {
+  const stateTitle = [];
+
+  let maxDepth = 0;
+  let currentDeptch = -1;
+
+  title.forEach(function loop(item) {
+    currentDeptch++;
+
+    if (!stateTitle[currentDeptch]) stateTitle[currentDeptch] = [];
+    stateTitle[currentDeptch].push(item.value);
+
+    if (item.children) {
+      item.children.forEach(loop);
+    }
+
+    maxDepth = Math.max(currentDeptch, maxDepth);
+    currentDeptch--;
+  })
+
+
+  return stateTitle;
+};
