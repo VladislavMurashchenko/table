@@ -10,7 +10,6 @@ function Table({data}) {
 
   function renderTitle() {
     const stateTitle = title ? getStateTitleFormTitle(title) : [];
-    console.log(stateTitle);
 
     return (
       <thead>
@@ -21,30 +20,6 @@ function Table({data}) {
             );
           })
         }
-
-        {/* <tr>
-          <td rowSpan="4">order</td>
-          <td rowSpan="4">task name</td>
-          <td colSpan="2">components</td>
-          <td colSpan="7">time</td>
-        </tr>
-        <tr>
-          <td rowSpan="3">software</td>
-          <td rowSpan="3">hardware</td>
-          <td rowSpan="3">count</td>
-          <td colSpan="5">delevelop</td>
-          <td rowSpan="3">Qa</td>
-        </tr>
-        <tr>
-          <td colSpan="4">software develop</td>
-          <td rowSpan="2">TDD</td>
-        </tr>
-        <tr>
-          <td>count</td>
-          <td>plagins</td>
-          <td>tasks</td>
-          <td>missings</td>
-        </tr> */}
       </thead>
     );
   }
@@ -74,24 +49,69 @@ export default Table;
 function getStateTitleFormTitle(title) {
   const stateTitle = [];
 
-  let currentDeptch = -1;
+  let currentDepth = -1;
+  let maxDepth = countMaxDepth(title);
+  let rowSpan = 1;
+  const colSpans = new Map();
 
   title.forEach(function loop(item) {
-    currentDeptch++;
+    currentDepth++;
 
-    if (!stateTitle[currentDeptch]) stateTitle[currentDeptch] = [];
+    if (!stateTitle[currentDepth]) stateTitle[currentDepth] = [];
+
+    const colSpan = countColSpan(item);
+    colSpans.set(item, colSpan);
 
     if (item.children) {
       item.children.forEach(loop);
+      rowSpan = 1;
+    } else {
+      rowSpan = maxDepth - currentDepth + 1;
     }
 
-    stateTitle[currentDeptch].push({
-      value: item.value
+    stateTitle[currentDepth].push({
+      value: item.value,
+      colSpan: colSpans.get(item),
+      rowSpan
     });
-
-    currentDeptch--;
-  })
-
-
+    currentDepth--;
+  });
   return stateTitle;
 };
+
+
+function countColSpan(item) {
+  let colSpan = 0;
+
+  if (!item.children) {
+    colSpan++;
+    return colSpan;
+  }
+
+  item.children.forEach((child) => {
+    if (!child.children) {
+      colSpan++;
+    } else {
+      colSpan += countColSpan(child);
+    }
+  });
+
+  return colSpan;
+}
+
+
+function countMaxDepth(title) {
+  let currentDepth = -1;
+  let maxDepth = 0;
+
+  title.forEach(function loop(item) {
+    currentDepth++;
+    if (item.children) {
+      item.children.forEach(loop);
+    }
+    maxDepth = Math.max(currentDepth, maxDepth);
+    currentDepth--;
+  });
+
+  return maxDepth;
+}

@@ -5,7 +5,8 @@ function TableTitleRow({ row }) {
     <tr>
       {
         Array.isArray(row) && row.map((item, i) => {
-          return <td key={i}>{item.value}</td>;
+          const {value, ...props} = item;
+          return <td key={i} {...props}>{value}</td>;
         })
       }
     </tr>
