@@ -6,10 +6,10 @@ import TableTitleRow from './TableTitleRow/TableTitleRow';
 
 
 function Table({data}) {
-  const {title, content} = data;
+  const { title, content } = data;
 
   function renderTitle() {
-    const stateTitle = title ? getStateTitleFormTitle(title) : [];
+    const stateTitle = title ? getStateTitleFromTitle(title) : [];
 
     return (
       <thead>
@@ -46,7 +46,7 @@ function Table({data}) {
 
 export default Table;
 
-function getStateTitleFormTitle(title) {
+function getStateTitleFromTitle(title) {
   const stateTitle = [];
 
   let currentDepth = -1;
